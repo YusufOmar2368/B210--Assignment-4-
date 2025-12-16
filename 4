@@ -1,0 +1,40 @@
+import csv
+import os
+import sys
+from typing import List, Tuple, Optional
+
+DEFAULT = "/Users/yomar/Downloads/combine.csv"
+
+def _to_int_year(s: Optional[str]) -> Optional[int]:
+    if s is None:
+        return None
+    s = str(s).strip()
+    if s == "":
+        return None
+    try:
+        return int(float(s))
+    except Exception:
+        digits = "".join(ch for ch in s if ch.isdigit())
+        return int(digits) if digits else None
+
+def top_players_by_seasons(csv_path: str, top: int = 5) -> List[Tuple[str, int]]:
+    if not os.path.isfile(csv_path):
+        raise FileNotFoundError(csv_path)
+    players_years = {}  # name -> set(years)
+    with open(csv_path, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            name = (row.get("nameFull") or (row.get("nameFirst", "").strip() + " " + row.get("nameLast", "").strip())).strip()
+            if not name:
+                continue
+            year = _to_int_year(row.get("combineYear") or row.get("year"))
+            players_years.setdefault(name, set())
+            if year is not None:
+                players_years[name].add(year)
+    scored = sorted(((name, len(years)) for name, years in players_years.items()), key=lambda t: t[1], reverse=True)
+    return scored[:top]
+
+if __name__ == "__main__":
+    path = sys.argv[1] if len(sys.argv) > 1 else DEFAULT
+    for i, (name, seasons) in enumerate(top_players_by_seasons(path, top=5), start=1):
+        print(f"{i}. {name} — {seasons} seasons")

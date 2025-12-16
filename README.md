@@ -1,1 +1,3 @@
-# B210--Assignment-4-
+The purpose of this program is to determine which players have participated in the most seasons based on data stored in a CSV file. It identifies the top five players by counting the number of unique seasons associated with each player.# B210--Assignment-4-
+The program takes a CSV file as input, extracts player names and season (year) values, and groups seasons by player using a dictionary of sets to ensure uniqueness. It outputs a ranked list of the top five players along with the number of seasons they have played, printing the results to the console.
+The program is executed as a Python script that reads the CSV file, converts year values into integers, and aggregates them per player using the top_players_by_seasons function. The code then sorts the players by season count and prints the final results in a clear, numbered format, demonstrating structured data processing and ranking logic.
